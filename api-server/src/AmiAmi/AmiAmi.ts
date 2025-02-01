@@ -1,6 +1,4 @@
 import { UtilTool } from "../Util/UtilTool";
-//const util=require("../Util/UtilTool");
-//import { CurlImpersonate } from "node-curl-impersonate";
 export class AmiAmi extends UtilTool{
 
     public requestConfig(){
@@ -9,7 +7,7 @@ export class AmiAmi extends UtilTool{
             impersonate: "firefox-109",
             headers:{
               'X-User-Key':'amiami_dev',
-              //'Sec-Fetch-Mode':'cors',
+              'Sec-Fetch-Mode':'cors',
             },
         };
         return config;
@@ -22,50 +20,52 @@ export class AmiAmi extends UtilTool{
         let page=1;
         let url=this.urlSet(search,page.toString());
         let error="OK";
-        let firstRequest=await this.fetch(url,this.requestConfig());
-        let status=await firstRequest.status;
-        if(status==200){
+        let firstRequest=await this.loopToGetRequest(url);
+        if(firstRequest==null){
             let jsonOutput={
                 items:[]
             };
-            var data=await firstRequest.json();
+            var data=firstRequest;
             if(data.search_result.total_results>0){
                 var loop=this.calculateLoop(data.search_result.total_results);
                 jsonOutput.items=data.items;
                 var post=await this.postRequest(postApi,jsonOutput,config);
-                if(post==200){
-                    if(loop>1){
+                if(post==200&&loop>1){
                         page++;
                         for(var i=page; i<loop; i++){
-                            var request=await this.fetch(this.urlSet(search,page.toString()),this.requestConfig());
-                            status=await request.status;
-                            if(status==200){
-                                data=await request.json();
+                            var request=await this.loopToGetRequest(this.urlSet(search,page.toString()));
+                            if(request!=null){
+                                data=request
                                 jsonOutput.items=data.items;
                                 post=await this.postRequest(postApi,jsonOutput,config);
                             }
                         }
-                    }
                 }else error="Post API does not exist or something went wrong";
             }else error="Search results does not exists";
         }
         return error;
     }
     public async requestSearch(search:string,page:string){
+        let results=null;
         let url=this.urlSet(search,page);
-        let request=await this.fetch(url,this.requestConfig());
-        return await request.json();
+        results= await this.loopToGetRequest(url);
+        return results;
     }
-    // using curl 
-    /*
-    public async curlRequest(){
-        let newReq=new CurlImpersonate(this.urlSet("nendoroid",1),this.requestConfig());
-        const request=await newReq.makeRequest();
-        let json = JSON.parse(request.response);
-        let items = json.items;
-        console.log(items);
+    
+   public async loopToGetRequest(url:string,limitRequest?:number){
+    let ok=false;
+    let results=null;
+    let count=0;
+    while(!ok){
+        let request=await fetch(url,this.requestConfig());
+        if(request.ok){
+            results=await request.json();
+            ok=true;
+        }
+        count++;
     }
-        */
+    return results;
+   }
     // send results to target api
     public async postRequest(api:string,json:any,config:any={}){
         var postConfig={
@@ -73,7 +73,7 @@ export class AmiAmi extends UtilTool{
             headers:config,
             body:JSON.stringify(json)
         };
-        var postRequest=await this.fetch(api,postConfig);
+        var postRequest=await fetch(api,postConfig);
         var status=await postRequest.status;
         return status;
     }

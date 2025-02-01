@@ -16,7 +16,7 @@ router.post('/request-post',async (req: express.Request, resp: express.Response,
     }
     resp.status(stat).json(repsonse);
 });
-router.post('/search/:item/:page',async (req: express.Request, resp: express.Response, next: express.NextFunction)=>{
+router.get('/search/:item/:page',async (req: express.Request, resp: express.Response, next: express.NextFunction)=>{
     const search=req.params.item;
     let page="1";
     if(req.params.page){
@@ -24,7 +24,9 @@ router.post('/search/:item/:page',async (req: express.Request, resp: express.Res
     }
     if(search!=""){
         let results=await api.requestSearch(search,page);
-        resp.json(results);
+        if(typeof results!='string'){
+            resp.json(results);
+        }else resp.send("AmiAmi status:"+results+" Explaination: Amiami regulates traffic control the best advice is send request within interval amounts of time or try again later");
     }else resp.status(500).send("error");
 });
 module.exports = router;
