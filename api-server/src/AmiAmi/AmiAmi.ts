@@ -9,6 +9,7 @@ export class AmiAmi extends UtilTool{
               'X-User-Key':'amiami_dev',
               'Sec-Fetch-Mode':'cors',
             },
+            signal:AbortSignal.timeout(2000)
         };
         return config;
     }
@@ -16,32 +17,36 @@ export class AmiAmi extends UtilTool{
         return "https://api.amiami.com/api/v1.0/items?pagemax=50&pagecnt="+pageNum+"&lang=eng&s_keywords="+search+"&s_sortkey=preowned&s_st_condition_flg=1";
     }
     // gather search results and send to post API in that request
-    public async requestSearchPost(search:string,postApi:string,config?:JSON){
+    public async requestSearchPost(search:string,postApi:string,config:Object={}){
         let page=1;
         let url=this.urlSet(search,page.toString());
-        let error="OK";
+        let error=200;
         let firstRequest=await this.loopToGetRequest(url);
-        if(firstRequest==null){
+        if(firstRequest!=null){
             let jsonOutput={
-                items:[]
+                search:search,
+                items:[],
+                total:0
             };
-            var data=firstRequest;
+            let data=firstRequest;
             if(data.search_result.total_results>0){
-                var loop=this.calculateLoop(data.search_result.total_results);
+                let loop=this.calculateLoop(data.search_result.total_results);
                 jsonOutput.items=data.items;
-                var post=await this.postRequest(postApi,jsonOutput,config);
+                jsonOutput.total=data.items.length;
+                let post=await this.postRequest(postApi,jsonOutput,config);
                 if(post==200&&loop>1){
                         page++;
                         for(var i=page; i<loop; i++){
-                            var request=await this.loopToGetRequest(this.urlSet(search,page.toString()));
+                            let request=await this.loopToGetRequest(this.urlSet(search,page.toString()));
                             if(request!=null){
                                 data=request
                                 jsonOutput.items=data.items;
+                                jsonOutput.total=data.items.length;
                                 post=await this.postRequest(postApi,jsonOutput,config);
                             }
                         }
-                }else error="Post API does not exist or something went wrong";
-            }else error="Search results does not exists";
+                }else error=post;
+            }else error=404;
         }
         return error;
     }
@@ -68,20 +73,30 @@ export class AmiAmi extends UtilTool{
    }
     // send results to target api
     public async postRequest(api:string,json:any,config:any={}){
-        var postConfig={
-            method:"Post",
-            headers:config,
+        let postConfig={
+            method:"POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
             body:JSON.stringify(json)
         };
-        var postRequest=await fetch(api,postConfig);
-        var status=await postRequest.status;
+        let returnReponse={ok:false,status:500};
+        let status=500;
+        try{
+            let postRequest=await fetch(api,postConfig);
+            status=await postRequest.status;
+            returnReponse={ok:postRequest.ok,status:status};
+        }catch(error){
+
+        }
         return status;
     }
     // calculate loop of requests
     public calculateLoop(results:number){
-        var res=1;
+        let res=1;
         res=results/50;
-        var remainder=results%50;
+        let remainder=results%50;
         if(remainder>0&&res>0){
             res=res+1;
         }

@@ -11,10 +11,10 @@ router.post('/request-post',async (req: express.Request, resp: express.Response,
     var repsonse={error:""};
     var stat=200;
     var request=await api.requestSearchPost(search,postApi,config);
-    if(request!=""){
-
-    }
-    resp.status(stat).json(repsonse);
+    if(request!=200){
+        repsonse.error="Post API does not exist or something went wrong. error code";
+        resp.status(500).json(repsonse);
+    }else resp.status(stat).json(repsonse);
 });
 router.get('/search/:item/:page',async (req: express.Request, resp: express.Response, next: express.NextFunction)=>{
     const search=req.params.item;

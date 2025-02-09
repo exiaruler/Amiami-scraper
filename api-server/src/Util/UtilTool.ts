@@ -1,7 +1,6 @@
-//import { mongoConnectionProperties } from "../Configuration";
 import { ErrorGenerator } from "./ErrorGenerator";
+import fetch from "node-fetch";
 export class UtilTool{
-    //public mongo=new mongoConnectionProperties();
     public error=new ErrorGenerator();
 
     public fetch = require('node-fetch');

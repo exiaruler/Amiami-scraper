@@ -2,19 +2,22 @@ import express from 'express';
 import cors from 'cors';
 const amiami=require('./AmiAmi/Route/amiami');
 const http = require("http");
-const port = process.env.PORT||process.env.PORT_HOST||3000;;
+const port = process.env.PORT || 3000;;
 const app = express()
 app.use(cors());
 app.use(express.json());
-const server = http.createServer(app);
+//const server = http.createServer(app);
+function createRouteUrl(route:String){
+  return "/api/"+route;
+}
 
-app.get('/', async (req:any, res:any) => {
+app.get(createRouteUrl(""), async (req:any, res:any) => {
   res.send("Active");
 })
-app.use('/amiami',amiami);
+app.use(createRouteUrl('amiami'),amiami);
 app.listen(port,async() => {
   console.log(`listening on port ${port}`)
-  console.log("http://localhost:"+port);
+  console.log("http://localhost:"+port+"/api");
 })
 
 
