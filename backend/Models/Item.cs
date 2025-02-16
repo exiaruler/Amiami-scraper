@@ -27,6 +27,8 @@ public class Item:ModelBase
     public Boolean SoldOut{get; set;}=false;
     // search keyword tags
     public ICollection<Tag> Tags {get;set;}=new List<Tag>();
+    // items associate to wish list
+    public ICollection<WishList> Wishs {get; set;}=new List<WishList>();
     
 
 }

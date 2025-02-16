@@ -88,4 +88,7 @@ export class UtilTool{
     public calculateHours(time:number){
         return time * 60 * 60 * 1000;
     }
+    public delay(ms:number){
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 }

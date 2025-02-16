@@ -5,7 +5,13 @@ namespace backend.Models;
 
 public class WishList:ModelBase
 {
-    public required string Wish{get; set;}
+    // item to search for
+    public string Wish{get; set;}="";
     // url used for scheduler
-    public required string Url{get; set;}
+    public string Url{get; set;}="";
+    // body for post request
+    public string Body {get; set;}="";
+    // items found associated to wish lish
+    public ICollection<Item> Items{get; set;}=new List<Item>();
+
 }

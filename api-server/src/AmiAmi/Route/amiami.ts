@@ -7,10 +7,10 @@ router.post('/',async (req: express.Request, resp: express.Response, next: expre
     resp.send("hello");
 });
 router.post('/request-post',async (req: express.Request, resp: express.Response, next: express.NextFunction)=>{
-    const {search,postApi,config}=req.body;
+    const {search,postApi,config,payload}=req.body;
     var repsonse={error:""};
     var stat=200;
-    var request=await api.requestSearchPost(search,postApi,config);
+    var request=await api.requestSearchPost(search,postApi,config,payload);
     if(request!=200){
         repsonse.error="Post API does not exist or something went wrong. error code";
         resp.status(500).json(repsonse);

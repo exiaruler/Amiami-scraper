@@ -10,11 +10,8 @@ public class AppDbContext:DbContext
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        
-        //modelBuilder.Entity<Item>().HasMany(it=>it.Tags).WithMany(c=>c.Items).UsingEntity(e=>e.ToTable("ItemTags"));
         modelBuilder.Entity<Item>().HasMany(it=>it.Tags).WithMany(c=>c.Items).UsingEntity("ItemTags");
-        //modelBuilder.Entity<Item>().HasMany(it=>it.Tags).WithMany(c=>c.Items).UsingEntity<Dictionary<string,object>>("ItemTags"
-        //);
+        modelBuilder.Entity<WishList>().HasMany(wish=>wish.Items).WithMany(c=>c.Wishs).UsingEntity("WishItems");
     }
     public DbSet<Item> Item{get;set;}
     public DbSet<WishList> WishList{get;set;}

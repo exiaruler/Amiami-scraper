@@ -4,18 +4,35 @@ using backend.ReferenceModels.Setting;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Npgsql;
+using Microsoft.Extensions.Configuration;
+using System;
+using System.Reflection;
+using backend.ReferenceModels.AmiamiReference;
+using Microsoft.EntityFrameworkCore.Internal;
+using Swashbuckle.AspNetCore.SwaggerGen;
 namespace backend.Base;
 
 public class BaseController: ControllerBase
 {
-    private string Connection="Host=localhost;Port=5432;Database=scraper;Username=postgres;Password=admin123";
-    public BaseController(){
-        using (StreamReader read=new StreamReader("appsettings.json"))
-        {
-            string json=read.ReadToEnd();
-            Console.WriteLine(json);
-            //settings=JsonConvert.DeserializeObject<List<AppSettings>>(json);
+    public readonly AppDbContext _context;
+    private string? Connection="";
+    public ServerConfiguration ServerConfig=new ServerConfiguration{};
+    //public PayLoad ServerConfiguration=new PayLoad{};
+    public BaseController(AppDbContext context){
+        var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+        var serverConfig=config.GetSection("ServerConfiguration").Get<ServerConfiguration>();
+        if(serverConfig!=null){
+            ServerConfig=serverConfig;
         }
+        string? sqlConnect= config.GetConnectionString("DefaultConnection");
+        Connection=sqlConnect;
+         _context=context;
+    }
+
+    public Object NewRecord(string cl){
+        Type? classCall=Type.GetType(cl);
+        
+        return new object();
     }
     public string GetDataString(string query)
     {
@@ -64,6 +81,7 @@ public class BaseController: ControllerBase
             return reader;
         }
     }
+    // execute INSERT and UPDATE queries
     public int ExecuteQuery(string query){
        using (var conn = new NpgsqlConnection(Connection))
         {
@@ -81,6 +99,9 @@ public class BaseController: ControllerBase
     public string QuoteField(string field){
         string output="\""+field+"\"";
         return output;
+    }
+    public string QuoteTable(string table){
+        return "public."+QuoteField(table);
     }
 
 }
