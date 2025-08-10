@@ -2,6 +2,7 @@ using backend.Base;
 using backend.Models;
 using backend.ReferenceModels.AmiamiReference;
 using backend.ReferenceModels.Setting;
+using backend.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,8 +13,10 @@ namespace backend.Controller
     [ApiController]
     public class WishListController : BaseController
     {
+        //public readonly WishListService wishListService;
         public WishListController(AppDbContext context) : base(context)
         {
+            //wishListService = wIshList;
         }
         [HttpGet("new")]
         public ActionResult<WishList> NewWish()
@@ -39,15 +42,17 @@ namespace backend.Controller
                 wish.Body=CreatePayLoad(wish.Id,wish.Wish);
                 if(prevWish.ToLower()!=wish.Wish.ToLower()){
                     wish.Items.Clear();
+                    _context.Item.Include(item=>item.Wishs.Where(it=>it.Id==id));
+                    ExecuteQuery("Delete from "+QuoteTable("WishItems")+" where "+QuoteField("WishsId")+"="+id);
                 }
                 _context.Entry(wish).State=EntityState.Modified;
                 await _context.SaveChangesAsync();
             }else return NotFound();
             return wish;
         }
-        [HttpGet("get-wish/{id?}")]
-        public async Task<ActionResult<WishList>> GetWish(long id){
-            var exist=await _context.WishList.Include(wish=>wish.Items).FirstOrDefaultAsync(wish=>wish.Id==id);
+        [HttpGet("get-wish/{id?}/{sold?}")]
+        public async Task<ActionResult<WishList>> GetWish(long id,Boolean sold){
+            var exist=await _context.WishList.Include(wish=>wish.Items.Where(item=>item.SoldOut==sold)).FirstOrDefaultAsync(wish=>wish.Id==id);
             if(exist==null) return NotFound();
             return exist;
         }

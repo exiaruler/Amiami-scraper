@@ -1,6 +1,7 @@
 import * as express from 'express';
 const router:express.Router=express.Router();
 import { AmiAmi } from '../AmiAmi';
+import { Response } from '../../interface/responseInterface';
 const api=new AmiAmi();
 
 router.post('/',async (req: express.Request, resp: express.Response, next: express.NextFunction)=>{
@@ -8,13 +9,17 @@ router.post('/',async (req: express.Request, resp: express.Response, next: expre
 });
 router.post('/request-post',async (req: express.Request, resp: express.Response, next: express.NextFunction)=>{
     const {search,postApi,config,payload}=req.body;
-    var repsonse={error:""};
+    var repsonse:Response={
+        success: false,
+        statusCode: 0,
+        messageResponse: ''
+    }
     var stat=200;
-    var request=await api.requestSearchPost(search,postApi,config,payload);
-    if(request!=200){
-        repsonse.error="Post API does not exist or something went wrong. error code";
-        resp.status(500).json(repsonse);
-    }else resp.status(stat).json(repsonse);
+    var repsonse=await api.requestSearchPost(search,postApi,config,payload);
+    if(repsonse.statusCode!=200){
+        repsonse.messageResponse="Post API does not exist or something went wrong. error code";
+        resp.status(repsonse.statusCode).json(repsonse.messageResponse);
+    }else resp.status(repsonse.statusCode).json(repsonse.messageResponse);
 });
 router.get('/search/:item/:page',async (req: express.Request, resp: express.Response, next: express.NextFunction)=>{
     const search=req.params.item;

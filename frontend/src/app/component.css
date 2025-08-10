@@ -1,0 +1,44 @@
+.App {
+    text-wrap: balance;
+    font-family: Arial, Helvetica, sans-serif;
+    background-size: cover;
+  }
+  
+  .Button-Regular{
+    padding:3px;
+  }
+  
+  .inlineblock{
+    display:inline-block;
+    padding:3px;
+  }
+  .CentreText{
+    text-align: center;
+  }
+  .ProjectTitle{
+    padding-left: 14px;
+  }
+  .disabled-link {
+    pointer-events: none;
+    color: black;
+  }
+  .TableRowSelect{
+    background-color:#D3D3D3;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .CheckBoxDiv{
+    padding-right: 86%;
+    padding-bottom: 10px;
+  }
+  .form-label{
+    font-weight: bold;
+  }
+  .form-text{
+    font-size: 15px;
+  }
+  .paragraph-body{
+    margin: 20px;
+    white-space: pre-line;
+  }

@@ -72,6 +72,10 @@ namespace backend.Migrations
                     b.Property<TimeSpan>("LastSeenTime")
                         .HasColumnType("interval");
 
+                    b.Property<string>("LastSeenTimeString")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Manufacturer")
                         .HasColumnType("text");
 
@@ -121,6 +125,15 @@ namespace backend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("ManualAdd")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("Search")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("SystemAdd")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime>("Updated")
                         .HasColumnType("timestamp with time zone");
 
@@ -144,6 +157,17 @@ namespace backend.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LastDate")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("LastTime")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("LastUpdate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("Updated")

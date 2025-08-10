@@ -1,4 +1,5 @@
 import { UtilTool } from "../Util/UtilTool";
+import { Response } from "../interface/responseInterface";
 export class AmiAmi extends UtilTool{
 
     public requestConfig(){
@@ -19,6 +20,11 @@ export class AmiAmi extends UtilTool{
     }
     // gather search results and send to post API in that request
     public async requestSearchPost(search:string,postApi:string,config:Object={},payload:Object={}){
+        var response:Response={
+            success: false,
+            statusCode: 200,
+            messageResponse: ""
+        };
         let page=1;
         let url=this.urlSet(search,page.toString());
         let error=200;
@@ -56,10 +62,18 @@ export class AmiAmi extends UtilTool{
                                 post=await this.postRequest(postApi,jsonOutput,config);
                             }
                         }
-                }else error=post;
-            }else error=404;
+                }else
+                {
+                    error=post;
+                    response.statusCode=post;
+                }
+            }else response.statusCode=404;
         }
-        return error;
+        if(response.statusCode==200){
+            response.success=true;
+            response.messageResponse="success";
+        }
+        return response;
     }
     public async requestSearch(search:string,page:string){
         let results=null;

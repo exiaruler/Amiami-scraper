@@ -21,8 +21,10 @@ public class Item:ModelBase
     public required string TransactionId{get; set;}
     // item last previous seen when update occurs
     public DateTime LastSeenDateTime {get; set;}=DateTime.UtcNow;
-    public string? LastSeenDate {get; set;}=DateTime.UtcNow.Date.ToString();
-    public TimeSpan LastSeenTime {get; set;}=new TimeSpan();
+    public string? LastSeenDate {get; set;}="";
+    public string LastSeenTimeString {get; set;}="";
+    // redundant
+    public TimeSpan LastSeenTime { get; set; } = new TimeSpan();
     // item is sold out
     public Boolean SoldOut{get; set;}=false;
     // search keyword tags
