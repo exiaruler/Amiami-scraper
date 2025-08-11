@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\GN001\\Documents\\Projects\\Amiami-scraper\\backend\\backend.csproj": {}
+    "C:\\Users\\GN001\\Documents\\Projects\\Amiami-scraper\\backend\\backend.csproj": {}
   },
   "projects": {
-    "c:\\Users\\GN001\\Documents\\Projects\\Amiami-scraper\\backend\\backend.csproj": {
+    "C:\\Users\\GN001\\Documents\\Projects\\Amiami-scraper\\backend\\backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\GN001\\Documents\\Projects\\Amiami-scraper\\backend\\backend.csproj",
+        "projectUniqueName": "C:\\Users\\GN001\\Documents\\Projects\\Amiami-scraper\\backend\\backend.csproj",
         "projectName": "backend",
-        "projectPath": "c:\\Users\\GN001\\Documents\\Projects\\Amiami-scraper\\backend\\backend.csproj",
+        "projectPath": "C:\\Users\\GN001\\Documents\\Projects\\Amiami-scraper\\backend\\backend.csproj",
         "packagesPath": "C:\\Users\\GN001\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\GN001\\Documents\\Projects\\Amiami-scraper\\backend\\obj\\",
+        "outputPath": "C:\\Users\\GN001\\Documents\\Projects\\Amiami-scraper\\backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\GN001\\AppData\\Roaming\\NuGet\\NuGet.Config"

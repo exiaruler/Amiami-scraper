@@ -3,12 +3,11 @@ using backend.Base;
 using backend.Models;
 using backend.ReferenceModels.AmiamiReference;
 using backend.ReferenceModels.Setting;
-using backend.Service.ServiceInterface;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Service;
 
-public class WishListService : BaseService,WishListInterface
+public class WishListService :BaseService
 {
     public WishListService(AppDbContext context) : base(context)
     {

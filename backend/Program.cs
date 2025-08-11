@@ -1,7 +1,6 @@
 using System.Text.Json.Serialization;
 using backend;
 using backend.Service;
-using backend.Service.ServiceInterface;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +11,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options =>
 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddScoped<WishListInterface, WishListService>();
+// service
+builder.Services.AddScoped<WishListService>();
+builder.Services.AddScoped<ItemService>();
+builder.Services.AddScoped<TagService>();
 builder.Services.AddControllers().AddJsonOptions(opt =>
 {
     opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
